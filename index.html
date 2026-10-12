@@ -494,6 +494,7 @@
       const svg = svgNode("svg", {
         viewBox: `0 0 ${width} ${height}`,
         class: compact ? "route-sparkline" : "detail-chart",
+        ...(compact ? {} : { id: "detail-chart" }),
         role: "img",
         "aria-label": `Perfil de elevación de ${routeName}, desde 0 hasta ${formatNumber(maxDistance, 1)} kilómetros.`,
         preserveAspectRatio: "none",
