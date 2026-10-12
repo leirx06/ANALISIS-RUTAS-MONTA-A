@@ -6,6 +6,8 @@
   <meta name="theme-color" content="#f4f3ed">
   <meta name="description" content="Perfiles de altitud y métricas de rutas de montaña.">
   <title>Análisis de rutas de montaña | Portfolio</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
   <style>
     :root {
       color-scheme: light;
@@ -301,6 +303,32 @@
     .dialog-top h2 { margin-bottom: 4px; font-size: clamp(1.5rem, 4vw, 2rem); line-height: 1.2; }
     .dialog-date { margin: 0; color: var(--muted); font-size: 0.9rem; }
 
+    .map-heading, .comment-heading { margin: 20px 0 10px; font-size: 1rem; }
+
+    .detail-map {
+      min-height: 300px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #e8eee5;
+    }
+
+    .detail-map-message {
+      display: grid;
+      min-height: 300px;
+      place-items: center;
+      padding: 20px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .route-comment {
+      margin: 0;
+      padding: 14px;
+      border-left: 3px solid var(--forest);
+      background: white;
+      white-space: pre-wrap;
+    }
+
     .dialog-close {
       width: 38px;
       height: 38px;
@@ -374,6 +402,7 @@
       .hero-metric { padding-right: 12px; }
       .hero-metric + .hero-metric { padding-left: 12px; }
       .detail-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .detail-map, .detail-map-message { min-height: 250px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -434,9 +463,13 @@
       </div>
       <button class="dialog-close" id="detail-close" type="button" aria-label="Cerrar ficha">×</button>
     </div>
+    <h3 class="map-heading">Mapa del recorrido</h3>
+    <div class="detail-map" id="detail-map" role="img" aria-label="Mapa del recorrido"></div>
     <svg class="detail-chart" id="detail-chart" viewBox="0 0 720 300" role="img"></svg>
     <p class="profile-readout" id="profile-readout" aria-live="polite">Mueve el cursor sobre el perfil para consultar distancia y altitud.</p>
     <dl class="detail-stats" id="detail-stats"></dl>
+    <h3 class="comment-heading">Comentario personal</h3>
+    <p class="route-comment" id="route-comment"></p>
   </dialog>
 
   <footer>
@@ -445,12 +478,15 @@
       <a href="https://github.com/leirx06" target="_blank" rel="noopener noreferrer">GitHub · @leirx06</a>
     </div>
   </footer>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script>
     const routeGrid = document.querySelector("#route-grid");
     const routeStatus = document.querySelector("#route-status");
     const routeDialog = document.querySelector("#route-dialog");
     const profileReadout = document.querySelector("#profile-readout");
     const svgNamespace = "http://www.w3.org/2000/svg";
+    let routeMap;
     const formatNumber = (value, digits = 0) =>
       new Intl.NumberFormat("es-ES", { maximumFractionDigits: digits }).format(value);
 
@@ -593,8 +629,54 @@
       if (Number.isFinite(route.calorias_kcal)) {
         addStat(detailStats, "Calorías", `${formatNumber(route.calorias_kcal)} kcal`);
       }
+      const routeComment = comments[route.ruta];
+      document.querySelector("#route-comment").textContent =
+        typeof routeComment === "string" && routeComment.trim()
+          ? routeComment.trim()
+          : "Todavía no hay comentarios para esta ruta.";
       profileReadout.textContent = "Mueve el cursor sobre el perfil para consultar distancia y altitud.";
       routeDialog.showModal();
+      requestAnimationFrame(() => {
+        showRouteMap(route);
+        routeMap?.invalidateSize();
+      });
+    }
+
+    function showRouteMap(route) {
+      const mapContainer = document.querySelector("#detail-map");
+      if (!Array.isArray(route.trazado) || route.trazado.length < 2) {
+        mapContainer.className = "detail-map detail-map-message";
+        mapContainer.textContent = "Este resumen no contiene el trazado GPS de la ruta.";
+        routeMap?.remove();
+        routeMap = null;
+        return;
+      }
+      if (!window.L) {
+        mapContainer.className = "detail-map detail-map-message";
+        mapContainer.textContent = "No se pudo cargar el mapa. Comprueba la conexión a Internet e inténtalo de nuevo.";
+        return;
+      }
+
+      mapContainer.className = "detail-map";
+      mapContainer.replaceChildren();
+      routeMap?.remove();
+      routeMap = window.L.map(mapContainer, { scrollWheelZoom: false });
+      window.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      }).addTo(routeMap);
+      const line = window.L.polyline(route.trazado, {
+        color: "#365c49",
+        weight: 4,
+        opacity: 0.9,
+      }).addTo(routeMap);
+      window.L.circleMarker(route.trazado[0], {
+        radius: 5, color: "#ffffff", weight: 2, fillColor: "#365c49", fillOpacity: 1,
+      }).addTo(routeMap).bindTooltip("Inicio");
+      window.L.circleMarker(route.trazado[route.trazado.length - 1], {
+        radius: 5, color: "#ffffff", weight: 2, fillColor: "#a0523a", fillOpacity: 1,
+      }).addTo(routeMap).bindTooltip("Fin");
+      routeMap.fitBounds(line.getBounds(), { padding: [20, 20] });
     }
 
     function addStat(list, label, value) {
@@ -607,10 +689,14 @@
       list.append(item);
     }
 
-    function renderRoutes(routes) {
-      routeGrid.replaceChildren();
+    let comments = {};
 
-      routes.forEach((route, index) => {
+    function renderRoutes(routes, routeComments) {
+      comments = routeComments;
+      routeGrid.replaceChildren();
+      const chronologicalRoutes = [...routes].sort((a, b) => b.fecha.localeCompare(a.fecha));
+
+      chronologicalRoutes.forEach((route, index) => {
         const card = document.createElement("article");
         const header = document.createElement("header");
         const identity = document.createElement("div");
@@ -659,17 +745,25 @@
         `${formatNumber(routes.reduce((total, route) => total + route.desnivel_neg_m, 0))} m`;
     }
 
-    fetch("output/resumen.json", { cache: "no-cache" })
-      .then((response) => {
+    Promise.all([
+      fetch("output/resumen.json", { cache: "no-cache" }).then((response) => {
         if (!response.ok) throw new Error(`No se pudo cargar el resumen (${response.status}).`);
         return response.json();
-      })
-      .then((routes) => {
+      }),
+      fetch("comentarios.json", { cache: "no-cache" }).then((response) => {
+        if (!response.ok) throw new Error(`No se pudieron cargar los comentarios (${response.status}).`);
+        return response.json();
+      }),
+    ])
+      .then(([routes, routeComments]) => {
         if (!Array.isArray(routes)) throw new Error("El resumen de rutas tiene un formato inesperado.");
         if (routes.some((route) => !Array.isArray(route.perfil) || route.perfil.length < 2)) {
           throw new Error("Faltan perfiles de elevación. Vuelve a generar el resumen de rutas.");
         }
-        renderRoutes(routes);
+        if (!routeComments || typeof routeComments !== "object" || Array.isArray(routeComments)) {
+          throw new Error("El archivo de comentarios tiene un formato inesperado.");
+        }
+        renderRoutes(routes, routeComments);
       })
       .catch((error) => {
         routeStatus.textContent = `${error.message} Comprueba que el resumen esté disponible y sirve la página desde un servidor web.`;

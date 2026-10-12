@@ -174,6 +174,16 @@ def perfil_publico(df: pd.DataFrame) -> list[dict[str, float]]:
     ]
 
 
+def trazado_publico(df: pd.DataFrame) -> list[list[float]]:
+    """Devuelve una muestra del recorrido GPS para dibujarlo en el portfolio público."""
+    indices = np.linspace(0, len(df) - 1, num=min(1200, len(df)), dtype=int)
+    muestra = df.iloc[indices][["lat", "lon"]]
+    return [
+        [round(float(latitud), 6), round(float(longitud), 6)]
+        for latitud, longitud in zip(muestra["lat"], muestra["lon"])
+    ]
+
+
 def main():
     archivos_gpx = sorted(DATA_DIR.glob("*.gpx"))
     if not archivos_gpx:
@@ -187,7 +197,7 @@ def main():
         calorias_por_ruta[df["ruta"].iloc[0]] = calorias_gpx(gpx)
 
     puntos = pd.concat(tablas, ignore_index=True)
-    res = pd.DataFrame([resumen(t) for t in tablas]).sort_values("fecha")
+    res = pd.DataFrame([resumen(t) for t in tablas]).sort_values("fecha", ascending=False)
     if any(valor is not None for valor in calorias_por_ruta.values()):
         res["calorias_kcal"] = res["ruta"].map(calorias_por_ruta)
 
@@ -211,7 +221,12 @@ def main():
         df["ruta"].iloc[0]: perfil_publico(df)
         for df in tablas
     }
+    trazados_por_ruta = {
+        df["ruta"].iloc[0]: trazado_publico(df)
+        for df in tablas
+    }
     resumen_publico["perfil"] = resumen_publico["ruta"].map(perfiles_por_ruta)
+    resumen_publico["trazado"] = resumen_publico["ruta"].map(trazados_por_ruta)
     resumen_publico.to_json(
         OUT_DIR / "resumen.json",
         orient="records",
