@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f3ed">
+  <meta name="description" content="Proyecto de análisis de datos GPS de rutas de montaña con Python, pandas y Matplotlib.">
+  <title>Análisis de rutas de montaña | Portfolio</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172b25;
+      --muted: #60726a;
+      --forest: #1f6f5c;
+      --forest-dark: #174b3f;
+      --lime: #d7e77b;
+      --paper: #f4f3ed;
+      --card: #fffefa;
+      --line: #dce2d8;
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: "Segoe UI", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      line-height: 1.6;
+    }
+
+    a { color: inherit; }
+
+    .wrap {
+      width: min(1120px, calc(100% - 48px));
+      margin-inline: auto;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 76px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--forest-dark);
+      font-size: 0.9rem;
+      font-weight: 750;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--forest);
+      color: white;
+      font-size: 1.1rem;
+    }
+
+    nav { display: flex; gap: 26px; }
+
+    nav a {
+      color: var(--muted);
+      font-size: 0.9rem;
+      text-decoration: none;
+    }
+
+    nav a:hover, nav a:focus-visible { color: var(--forest); }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      align-items: center;
+      gap: 64px;
+      padding-block: 88px 76px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin: 0 0 18px;
+      color: var(--forest);
+      font-size: 0.76rem;
+      font-weight: 750;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      width: 24px;
+      height: 2px;
+      background: var(--forest);
+      content: "";
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      max-width: 690px;
+      margin-bottom: 22px;
+      font-family: var(--serif);
+      font-size: clamp(3rem, 6vw, 5.4rem);
+      font-weight: 500;
+      letter-spacing: -0.055em;
+      line-height: 0.98;
+    }
+
+    h1 span { color: var(--forest); font-style: italic; }
+
+    .hero-copy {
+      max-width: 570px;
+      margin-bottom: 30px;
+      color: var(--muted);
+      font-size: 1.12rem;
+    }
+
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+
+    .button {
+      display: inline-flex;
+      min-height: 46px;
+      align-items: center;
+      justify-content: center;
+      padding: 0 18px;
+      border: 1px solid var(--forest);
+      border-radius: 4px;
+      background: var(--forest);
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: background 160ms ease, transform 160ms ease;
+    }
+
+    .button:hover { transform: translateY(-2px); background: var(--forest-dark); }
+
+    .button.secondary { background: transparent; color: var(--forest); }
+    .button.secondary:hover { background: #e8eee5; }
+
+    .hero-art {
+      position: relative;
+      display: grid;
+      min-height: 330px;
+      place-items: center;
+      overflow: hidden;
+      border-radius: 48% 48% 8px 8px;
+      background:
+        radial-gradient(ellipse at 50% 100%, #769b70 0 20%, transparent 20.5%),
+        linear-gradient(160deg, #dce8c8 0%, #b9d0a8 48%, #77977a 100%);
+    }
+
+    .hero-art::before, .hero-art::after {
+      position: absolute;
+      right: -10%;
+      bottom: 0;
+      left: -10%;
+      height: 66%;
+      background: #789572;
+      clip-path: polygon(0 100%, 0 65%, 24% 27%, 41% 67%, 61% 9%, 100% 71%, 100% 100%);
+      content: "";
+    }
+
+    .hero-art::after {
+      height: 47%;
+      background: #315e4d;
+      clip-path: polygon(0 100%, 0 73%, 22% 40%, 43% 78%, 71% 16%, 100% 66%, 100% 100%);
+    }
+
+    .sun {
+      position: absolute;
+      top: 46px;
+      right: 55px;
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: var(--lime);
+    }
+
+    .art-label {
+      position: absolute;
+      z-index: 1;
+      right: 18px;
+      bottom: 18px;
+      left: 18px;
+      display: flex;
+      justify-content: space-between;
+      color: white;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .project {
+      padding-block: 76px 84px;
+      border-top: 1px solid var(--line);
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 30px;
+      margin-bottom: 28px;
+    }
+
+    .section-heading h2, .approach h2 {
+      margin-bottom: 0;
+      font-family: var(--serif);
+      font-size: clamp(2.1rem, 4vw, 3.25rem);
+      font-weight: 500;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+    }
+
+    .section-heading p { max-width: 390px; margin-bottom: 2px; color: var(--muted); }
+
+    .route-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .route-card {
+      padding: 21px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--card);
+    }
+
+    .route-card header {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .route-card h3 { margin-bottom: 3px; font-size: 1rem; line-height: 1.3; }
+    .route-card time { color: var(--muted); font-size: 0.8rem; }
+
+    .route-symbol {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      flex: 0 0 auto;
+      place-items: center;
+      border-radius: 50%;
+      background: #e8eee5;
+      color: var(--forest);
+    }
+
+    .route-stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 13px 10px;
+      margin: 0;
+    }
+
+    .route-stats div { min-width: 0; }
+    .route-stats dt { color: var(--muted); font-size: 0.73rem; }
+    .route-stats dd { margin: 1px 0 0; color: var(--forest-dark); font-size: 1rem; font-weight: 750; }
+
+    .route-status {
+      margin: 0 0 15px;
+      color: var(--muted);
+      font-size: 0.83rem;
+    }
+
+    .chart-card {
+      overflow: hidden;
+      padding: clamp(12px, 2.4vw, 28px);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--card);
+      box-shadow: 0 18px 55px rgb(29 52 41 / 7%);
+    }
+
+    .chart-card img { display: block; width: 100%; height: auto; }
+
+    .chart-caption {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 16px 4px 0;
+      color: var(--muted);
+      font-size: 0.83rem;
+    }
+
+    .approach {
+      display: grid;
+      grid-template-columns: 0.8fr 1.2fr;
+      gap: 72px;
+      padding-block: 76px 88px;
+      border-top: 1px solid var(--line);
+    }
+
+    .approach-intro { max-width: 340px; color: var(--muted); }
+
+    .steps { display: grid; gap: 0; }
+
+    .step {
+      display: grid;
+      grid-template-columns: 46px 1fr;
+      gap: 18px;
+      padding: 0 0 23px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .step + .step { padding-top: 23px; }
+    .step:last-child { padding-bottom: 0; border-bottom: 0; }
+
+    .step-number {
+      color: var(--forest);
+      font-family: var(--serif);
+      font-size: 1.35rem;
+    }
+
+    .step h3 { margin-bottom: 4px; font-size: 1rem; }
+    .step p { margin-bottom: 0; color: var(--muted); font-size: 0.92rem; }
+
+    .tool-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 26px; }
+
+    .tool-tags span {
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 99px;
+      color: var(--forest-dark);
+      font-size: 0.78rem;
+      font-weight: 650;
+    }
+
+    footer {
+      padding-block: 22px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .footer-inner { display: flex; justify-content: space-between; gap: 20px; }
+
+    @media (max-width: 760px) {
+      .wrap { width: min(100% - 36px, 600px); }
+      .topbar { min-height: 66px; }
+      nav { gap: 15px; }
+      nav a { font-size: 0.82rem; }
+      .hero { grid-template-columns: 1fr; gap: 38px; padding-block: 66px 58px; }
+      .hero-art { min-height: 250px; }
+      .sun { top: 34px; right: 42px; width: 48px; height: 48px; }
+      .section-heading { display: block; }
+      .section-heading p { margin-top: 14px; }
+      .project { padding-block: 58px; }
+      .approach { grid-template-columns: 1fr; gap: 34px; padding-block: 58px; }
+    }
+
+    @media (max-width: 420px) {
+      .brand { font-size: 0.78rem; }
+      .brand-mark { width: 30px; height: 30px; }
+      nav { gap: 11px; }
+      nav a { font-size: 0.75rem; }
+      .chart-caption, .footer-inner { flex-direction: column; gap: 5px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="wrap topbar">
+    <a class="brand" href="#inicio" aria-label="Inicio">
+      <span class="brand-mark" aria-hidden="true">↗</span>
+      <span>PORTFOLIO · DATA &amp; OUTDOORS</span>
+    </a>
+    <nav aria-label="Navegación principal">
+      <a href="#proyecto">Proyecto</a>
+      <a href="#metodo">Metodología</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="wrap hero" id="inicio">
+      <div>
+        <p class="eyebrow">Proyecto destacado</p>
+        <h1>Datos que cuentan historias <span>de montaña.</span></h1>
+        <p class="hero-copy">
+          Un análisis reproducible de rutas GPS para transformar archivos GPX
+          en estadísticas claras y perfiles de elevación comparables.
+        </p>
+        <div class="actions">
+          <a class="button" href="#proyecto">Explorar el proyecto <span aria-hidden="true">&nbsp;↓</span></a>
+          <a class="button secondary" href="#metodo">Cómo está hecho</a>
+        </div>
+      </div>
+      <div class="hero-art" role="img" aria-label="Ilustración abstracta de montañas al amanecer">
+        <span class="sun" aria-hidden="true"></span>
+        <div class="art-label"><span>Exploración</span><span>·</span><span>Datos</span><span>·</span><span>Terreno</span></div>
+      </div>
+    </section>
+
+    <section class="wrap project" id="proyecto">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Visualización</p>
+            <h2>Cada ruta, de un vistazo.</h2>
+        </div>
+          <p>Las estadísticas y los perfiles se actualizan al añadir archivos GPX y volver a ejecutar los scripts.</p>
+      </div>
+      <p class="route-status" id="route-status" role="status" aria-live="polite">Cargando rutas…</p>
+      <div class="route-grid" id="route-grid"></div>
+      <figure class="chart-card">
+          <img src="output/perfiles_elevacion.png" alt="Perfiles de elevación de siete rutas de montaña, con distancia, altitud y desnivel acumulado." width="1800" height="1950">
+        <figcaption class="chart-caption">
+          <span>Perfiles de elevación de mis rutas de montaña</span>
+          <span>Cada gráfico tiene su propia escala de altitud.</span>
+        </figcaption>
+      </figure>
+    </section>
+
+    <section class="wrap approach" id="metodo">
+      <div>
+        <p class="eyebrow">Proceso</p>
+        <h2>De GPX a una lectura útil.</h2>
+        <p class="approach-intro">Dos scripts de Python automatizan la lectura, el cálculo de métricas y la creación del gráfico.</p>
+        <div class="tool-tags" aria-label="Tecnologías utilizadas">
+          <span>Python</span><span>pandas</span><span>NumPy</span><span>Matplotlib</span><span>GPX / XML</span>
+        </div>
+      </div>
+      <div class="steps">
+        <article class="step">
+          <span class="step-number">01</span>
+          <div><h3>Leer los datos</h3><p>Se recorren los puntos del GPX para extraer coordenadas, altitud, tiempo y, cuando están disponibles, datos de actividad.</p></div>
+        </article>
+        <article class="step">
+          <span class="step-number">02</span>
+          <div><h3>Calcular las métricas</h3><p>Se estima la distancia con Haversine y el desnivel con un umbral para reducir el ruido del altímetro.</p></div>
+        </article>
+        <article class="step">
+          <span class="step-number">03</span>
+          <div><h3>Comparar visualmente</h3><p>Los perfiles se suavizan con una media móvil y se presentan en una cuadrícula de gráficos independientes.</p></div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-inner">
+      <span>Proyecto personal · Análisis de rutas de montaña</span>
+      <span>Python · Datos GPS · Visualización</span>
+    </div>
+  </footer>
+  <script>
+    const routeGrid = document.querySelector("#route-grid");
+    const routeStatus = document.querySelector("#route-status");
+    const formatNumber = (value, digits = 0) =>
+      new Intl.NumberFormat("es-ES", { maximumFractionDigits: digits }).format(value);
+
+    function addStat(list, label, value) {
+      const item = document.createElement("div");
+      const term = document.createElement("dt");
+      const description = document.createElement("dd");
+      term.textContent = label;
+      description.textContent = value;
+      item.append(term, description);
+      list.append(item);
+    }
+
+    function renderRoutes(routes) {
+      routeGrid.replaceChildren();
+
+      for (const route of routes) {
+        const card = document.createElement("article");
+        const header = document.createElement("header");
+        const identity = document.createElement("div");
+        const title = document.createElement("h3");
+        const date = document.createElement("time");
+        const icon = document.createElement("span");
+        const stats = document.createElement("dl");
+
+        card.className = "route-card";
+        title.textContent = route.ruta;
+        date.dateTime = route.fecha;
+        date.textContent = new Intl.DateTimeFormat("es-ES", {
+          day: "2-digit", month: "short", year: "numeric", timeZone: "UTC"
+        }).format(new Date(`${route.fecha.slice(0, 10)}T00:00:00Z`));
+        icon.className = "route-symbol";
+        icon.setAttribute("aria-hidden", "true");
+        icon.textContent = "↗";
+        stats.className = "route-stats";
+
+        identity.append(title, date);
+        header.append(identity, icon);
+        addStat(stats, "Distancia", `${formatNumber(route.distancia_km, 2)} km`);
+        addStat(stats, "Desnivel positivo", `+${formatNumber(route.desnivel_pos_m)} m`);
+        addStat(stats, "Desnivel negativo", `−${formatNumber(route.desnivel_neg_m)} m`);
+        addStat(stats, "Altitud máxima", `${formatNumber(route.alt_max_m)} m`);
+        card.append(header, stats);
+        routeGrid.append(card);
+      }
+
+      routeStatus.textContent = `${routes.length} ${routes.length === 1 ? "ruta" : "rutas"} en el proyecto`;
+      const chart = document.querySelector(".chart-card img");
+      chart.alt = `Perfiles de elevación de ${routes.length} ${routes.length === 1 ? "ruta" : "rutas"} de montaña, con distancia, altitud y desnivel acumulado.`;
+    }
+
+    fetch("output/resumen.json", { cache: "no-cache" })
+      .then((response) => {
+        if (!response.ok) throw new Error(`No se pudo cargar el resumen (${response.status}).`);
+        return response.json();
+      })
+      .then((routes) => {
+        if (!Array.isArray(routes)) throw new Error("El resumen de rutas tiene un formato inesperado.");
+        renderRoutes(routes);
+      })
+      .catch((error) => {
+        routeStatus.textContent = `${error.message} Ejecuta 01_cargar_gpx.py y sirve la página desde un servidor web.`;
+      });
+  </script>
+</body>
+</html>
