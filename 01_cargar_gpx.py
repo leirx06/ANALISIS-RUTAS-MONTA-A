@@ -134,6 +134,19 @@ def resumen(df: pd.DataFrame) -> dict:
     }
 
 
+def perfil_publico(df: pd.DataFrame) -> list[dict[str, float]]:
+    """Devuelve una muestra del perfil sin publicar coordenadas ni pulsaciones."""
+    indices = np.linspace(0, len(df) - 1, num=min(120, len(df)), dtype=int)
+    muestra = df.iloc[indices][["dist_acum_km", "ele"]]
+    return [
+        {
+            "distancia_km": round(float(distancia), 3),
+            "altitud_m": round(float(altitud), 1),
+        }
+        for distancia, altitud in zip(muestra["dist_acum_km"], muestra["ele"])
+    ]
+
+
 def main():
     archivos_gpx = sorted(DATA_DIR.glob("*.gpx"))
     if not archivos_gpx:
@@ -160,7 +173,9 @@ def main():
         "tiempo_total_h",
         "tiempo_mov_h",
     ]
-    res[columnas_publicas].to_json(
+    resumen_publico = res[columnas_publicas].copy()
+    resumen_publico["perfil"] = [perfil_publico(df) for df in tablas]
+    resumen_publico.to_json(
         OUT_DIR / "resumen.json",
         orient="records",
         force_ascii=False,

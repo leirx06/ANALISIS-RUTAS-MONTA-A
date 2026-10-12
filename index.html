@@ -9,15 +9,13 @@
   <style>
     :root {
       color-scheme: light;
-      --ink: #172b25;
-      --muted: #60726a;
-      --forest: #1f6f5c;
-      --forest-dark: #174b3f;
-      --lime: #d7e77b;
-      --paper: #f4f3ed;
-      --card: #fffefa;
-      --line: #dce2d8;
-      --serif: Georgia, "Times New Roman", serif;
+      --ink: #202a25;
+      --muted: #626e67;
+      --forest: #365c49;
+      --forest-dark: #263f32;
+      --paper: #f6f7f4;
+      --card: #ffffff;
+      --line: #dfe5df;
       --sans: "Segoe UI", Arial, sans-serif;
     }
 
@@ -54,8 +52,8 @@
       gap: 10px;
       color: var(--forest-dark);
       font-size: 0.9rem;
-      font-weight: 750;
-      letter-spacing: 0.02em;
+      font-weight: 650;
+      letter-spacing: 0.01em;
       text-decoration: none;
     }
 
@@ -64,10 +62,10 @@
       width: 34px;
       height: 34px;
       place-items: center;
-      border-radius: 50%;
+      border-radius: 4px;
       background: var(--forest);
       color: white;
-      font-size: 1.1rem;
+      font-size: 0.95rem;
     }
 
     nav { display: flex; gap: 26px; }
@@ -81,11 +79,7 @@
     nav a:hover, nav a:focus-visible { color: var(--forest); }
 
     .hero {
-      display: grid;
-      grid-template-columns: 1.2fr 0.8fr;
-      align-items: center;
-      gap: 64px;
-      padding-block: 88px 76px;
+      padding-block: 76px 54px;
     }
 
     .eyebrow {
@@ -110,22 +104,21 @@
     h1, h2, h3, p { margin-top: 0; }
 
     h1 {
-      max-width: 690px;
-      margin-bottom: 22px;
-      font-family: var(--serif);
-      font-size: clamp(3rem, 6vw, 5.4rem);
-      font-weight: 500;
-      letter-spacing: -0.055em;
-      line-height: 0.98;
+      max-width: 780px;
+      margin-bottom: 18px;
+      font-size: clamp(2.5rem, 5vw, 4.25rem);
+      font-weight: 650;
+      letter-spacing: -0.045em;
+      line-height: 1.04;
     }
 
-    h1 span { color: var(--forest); font-style: italic; }
+    h1 span { color: var(--forest); }
 
     .hero-copy {
-      max-width: 570px;
-      margin-bottom: 30px;
+      max-width: 650px;
+      margin-bottom: 25px;
       color: var(--muted);
-      font-size: 1.12rem;
+      font-size: 1.05rem;
     }
 
     .actions { display: flex; flex-wrap: wrap; gap: 12px; }
@@ -137,72 +130,51 @@
       justify-content: center;
       padding: 0 18px;
       border: 1px solid var(--forest);
-      border-radius: 4px;
+      border-radius: 3px;
       background: var(--forest);
       color: white;
       font-size: 0.9rem;
       font-weight: 700;
       text-decoration: none;
-      transition: background 160ms ease, transform 160ms ease;
+      transition: background 160ms ease;
     }
 
-    .button:hover { transform: translateY(-2px); background: var(--forest-dark); }
+    .button:hover { background: var(--forest-dark); }
 
     .button.secondary { background: transparent; color: var(--forest); }
     .button.secondary:hover { background: #e8eee5; }
 
-    .hero-art {
-      position: relative;
+    .hero-metrics {
       display: grid;
-      min-height: 330px;
-      place-items: center;
-      overflow: hidden;
-      border-radius: 48% 48% 8px 8px;
-      background:
-        radial-gradient(ellipse at 50% 100%, #769b70 0 20%, transparent 20.5%),
-        linear-gradient(160deg, #dce8c8 0%, #b9d0a8 48%, #77977a 100%);
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-top: 42px;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
     }
 
-    .hero-art::before, .hero-art::after {
-      position: absolute;
-      right: -10%;
-      bottom: 0;
-      left: -10%;
-      height: 66%;
-      background: #789572;
-      clip-path: polygon(0 100%, 0 65%, 24% 27%, 41% 67%, 61% 9%, 100% 71%, 100% 100%);
-      content: "";
+    .hero-metric {
+      min-height: 92px;
+      padding: 17px 20px 17px 0;
     }
 
-    .hero-art::after {
-      height: 47%;
-      background: #315e4d;
-      clip-path: polygon(0 100%, 0 73%, 22% 40%, 43% 78%, 71% 16%, 100% 66%, 100% 100%);
+    .hero-metric + .hero-metric {
+      padding-left: 20px;
+      border-left: 1px solid var(--line);
     }
 
-    .sun {
-      position: absolute;
-      top: 46px;
-      right: 55px;
-      width: 58px;
-      height: 58px;
-      border-radius: 50%;
-      background: var(--lime);
+    .hero-metric strong {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--forest-dark);
+      font-size: 1.45rem;
+      font-weight: 650;
+      letter-spacing: -0.035em;
+      line-height: 1.2;
     }
 
-    .art-label {
-      position: absolute;
-      z-index: 1;
-      right: 18px;
-      bottom: 18px;
-      left: 18px;
-      display: flex;
-      justify-content: space-between;
-      color: white;
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
+    .hero-metric span {
+      color: var(--muted);
+      font-size: 0.78rem;
     }
 
     .project {
@@ -220,11 +192,10 @@
 
     .section-heading h2, .approach h2 {
       margin-bottom: 0;
-      font-family: var(--serif);
-      font-size: clamp(2.1rem, 4vw, 3.25rem);
-      font-weight: 500;
+      font-size: clamp(1.8rem, 3.6vw, 2.55rem);
+      font-weight: 620;
       letter-spacing: -0.04em;
-      line-height: 1.05;
+      line-height: 1.12;
     }
 
     .section-heading p { max-width: 390px; margin-bottom: 2px; color: var(--muted); }
@@ -237,10 +208,28 @@
     }
 
     .route-card {
-      padding: 21px;
+      padding: 18px;
       border: 1px solid var(--line);
       border-radius: 6px;
       background: var(--card);
+    }
+
+    .route-open {
+      display: block;
+      width: 100%;
+      margin: 0 0 15px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+      font: inherit;
+      text-align: left;
+    }
+
+    .route-open:focus-visible {
+      outline: 3px solid #71927b;
+      outline-offset: 4px;
     }
 
     .route-card header {
@@ -248,7 +237,7 @@
       align-items: start;
       justify-content: space-between;
       gap: 12px;
-      margin-bottom: 18px;
+      margin-bottom: 8px;
     }
 
     .route-card h3 { margin-bottom: 3px; font-size: 1rem; line-height: 1.3; }
@@ -256,13 +245,23 @@
 
     .route-symbol {
       display: grid;
-      width: 34px;
-      height: 34px;
+      width: 28px;
+      height: 28px;
       flex: 0 0 auto;
       place-items: center;
       border-radius: 50%;
       background: #e8eee5;
       color: var(--forest);
+    }
+
+    .route-sparkline { display: block; width: 100%; height: 58px; }
+
+    .route-open-hint {
+      display: block;
+      margin-top: 3px;
+      color: var(--forest);
+      font-size: 0.76rem;
+      font-weight: 650;
     }
 
     .route-stats {
@@ -276,73 +275,85 @@
     .route-stats dt { color: var(--muted); font-size: 0.73rem; }
     .route-stats dd { margin: 1px 0 0; color: var(--forest-dark); font-size: 1rem; font-weight: 750; }
 
+    .route-energy {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+      font-size: 0.76rem;
+    }
+
+    .route-energy span:first-child { color: var(--muted); }
+    .route-energy span:last-child { color: var(--forest-dark); font-weight: 650; text-align: right; }
+
+    .route-dialog {
+      width: min(720px, calc(100% - 32px));
+      max-width: none;
+      max-height: min(88vh, 850px);
+      padding: clamp(20px, 4vw, 36px);
+      overflow-y: auto;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--paper);
+      color: var(--ink);
+      box-shadow: 0 24px 80px rgb(17 34 25 / 25%);
+    }
+
+    .route-dialog::backdrop { background: rgb(22 34 28 / 58%); }
+
+    .dialog-top {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 7px;
+    }
+
+    .dialog-top h2 { margin-bottom: 4px; font-size: clamp(1.5rem, 4vw, 2rem); line-height: 1.2; }
+    .dialog-date { margin: 0; color: var(--muted); font-size: 0.9rem; }
+
+    .dialog-close {
+      width: 38px;
+      height: 38px;
+      flex: 0 0 auto;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: white;
+      color: var(--ink);
+      cursor: pointer;
+      font-size: 1.25rem;
+    }
+
+    .detail-chart {
+      display: block;
+      width: 100%;
+      margin: 22px 0 8px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: white;
+      touch-action: pan-y;
+    }
+
+    .profile-readout { min-height: 1.5em; margin: 0 0 20px; color: var(--muted); font-size: 0.83rem; }
+    .detail-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+
+    .detail-stat {
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: white;
+    }
+
+    .detail-stat dt { color: var(--muted); font-size: 0.76rem; }
+    .detail-stat dd { margin: 3px 0 0; color: var(--forest-dark); font-size: 1.08rem; font-weight: 700; }
+
     .route-status {
       margin: 0 0 15px;
       color: var(--muted);
       font-size: 0.83rem;
-    }
-
-    .chart-card {
-      overflow: hidden;
-      padding: clamp(12px, 2.4vw, 28px);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--card);
-      box-shadow: 0 18px 55px rgb(29 52 41 / 7%);
-    }
-
-    .chart-card img { display: block; width: 100%; height: auto; }
-
-    .chart-caption {
-      display: flex;
-      justify-content: space-between;
-      gap: 20px;
-      padding: 16px 4px 0;
-      color: var(--muted);
-      font-size: 0.83rem;
-    }
-
-    .approach {
-      display: grid;
-      grid-template-columns: 0.8fr 1.2fr;
-      gap: 72px;
-      padding-block: 76px 88px;
-      border-top: 1px solid var(--line);
-    }
-
-    .approach-intro { max-width: 340px; color: var(--muted); }
-
-    .steps { display: grid; gap: 0; }
-
-    .step {
-      display: grid;
-      grid-template-columns: 46px 1fr;
-      gap: 18px;
-      padding: 0 0 23px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .step + .step { padding-top: 23px; }
-    .step:last-child { padding-bottom: 0; border-bottom: 0; }
-
-    .step-number {
-      color: var(--forest);
-      font-family: var(--serif);
-      font-size: 1.35rem;
-    }
-
-    .step h3 { margin-bottom: 4px; font-size: 1rem; }
-    .step p { margin-bottom: 0; color: var(--muted); font-size: 0.92rem; }
-
-    .tool-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 26px; }
-
-    .tool-tags span {
-      padding: 6px 10px;
-      border: 1px solid var(--line);
-      border-radius: 99px;
-      color: var(--forest-dark);
-      font-size: 0.78rem;
-      font-weight: 650;
     }
 
     footer {
@@ -359,21 +370,24 @@
       .topbar { min-height: 66px; }
       nav { gap: 15px; }
       nav a { font-size: 0.82rem; }
-      .hero { grid-template-columns: 1fr; gap: 38px; padding-block: 66px 58px; }
-      .hero-art { min-height: 250px; }
-      .sun { top: 34px; right: 42px; width: 48px; height: 48px; }
+      .hero { padding-block: 62px 45px; }
+      .hero-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .hero-metric:nth-child(3) { padding-left: 0; border-left: 0; border-top: 1px solid var(--line); }
+      .hero-metric:nth-child(4) { border-top: 1px solid var(--line); }
       .section-heading { display: block; }
       .section-heading p { margin-top: 14px; }
       .project { padding-block: 58px; }
-      .approach { grid-template-columns: 1fr; gap: 34px; padding-block: 58px; }
     }
 
     @media (max-width: 420px) {
-      .brand { font-size: 0.78rem; }
+      .brand { font-size: 0.72rem; }
       .brand-mark { width: 30px; height: 30px; }
       nav { gap: 11px; }
       nav a { font-size: 0.75rem; }
       .chart-caption, .footer-inner { flex-direction: column; gap: 5px; }
+      .hero-metric { padding-right: 12px; }
+      .hero-metric + .hero-metric { padding-left: 12px; }
+      .detail-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -385,79 +399,58 @@
 <body>
   <header class="wrap topbar">
     <a class="brand" href="#inicio" aria-label="Inicio">
-      <span class="brand-mark" aria-hidden="true">↗</span>
-      <span>PORTFOLIO · DATA &amp; OUTDOORS</span>
+      <span class="brand-mark" aria-hidden="true">R</span>
+      <span>ANÁLISIS DE RUTAS · PYTHON</span>
     </a>
     <nav aria-label="Navegación principal">
-      <a href="#proyecto">Proyecto</a>
-      <a href="#metodo">Metodología</a>
+      <a href="#proyecto">Rutas</a>
     </nav>
   </header>
 
   <main>
     <section class="wrap hero" id="inicio">
       <div>
-        <p class="eyebrow">Proyecto destacado</p>
-        <h1>Datos que cuentan historias <span>de montaña.</span></h1>
-        <p class="hero-copy">
-          Un análisis reproducible de rutas GPS para transformar archivos GPX
-          en estadísticas claras y perfiles de elevación comparables.
-        </p>
+        <p class="eyebrow">Proyecto de análisis de datos</p>
+        <h1>Rutas de montaña:<br><span>del GPX a la visualización.</span></h1>
+        <p class="hero-copy">Una vista interactiva de recorridos de montaña, sus perfiles de altitud y sus principales métricas.</p>
         <div class="actions">
-          <a class="button" href="#proyecto">Explorar el proyecto <span aria-hidden="true">&nbsp;↓</span></a>
-          <a class="button secondary" href="#metodo">Cómo está hecho</a>
+          <a class="button" href="#proyecto">Explorar rutas</a>
         </div>
       </div>
-      <div class="hero-art" role="img" aria-label="Ilustración abstracta de montañas al amanecer">
-        <span class="sun" aria-hidden="true"></span>
-        <div class="art-label"><span>Exploración</span><span>·</span><span>Datos</span><span>·</span><span>Terreno</span></div>
+      <div class="hero-metrics" aria-label="Resumen del proyecto">
+        <div class="hero-metric"><strong id="route-count">—</strong><span>rutas analizadas</span></div>
+        <div class="hero-metric"><strong id="total-distance">—</strong><span>distancia acumulada</span></div>
+        <div class="hero-metric"><strong id="total-ascent">—</strong><span>desnivel positivo acumulado</span></div>
+        <div class="hero-metric"><strong>Sin dato</strong><span>calorías no incluidas en los GPX</span></div>
       </div>
     </section>
 
     <section class="wrap project" id="proyecto">
       <div class="section-heading">
         <div>
-          <p class="eyebrow">Visualización</p>
-            <h2>Cada ruta, de un vistazo.</h2>
+          <p class="eyebrow">Resultados</p>
+            <h2>Actividad y perfil de elevación</h2>
         </div>
           <p>Las estadísticas y los perfiles se actualizan al añadir archivos GPX y volver a ejecutar los scripts.</p>
       </div>
       <p class="route-status" id="route-status" role="status" aria-live="polite">Cargando rutas…</p>
       <div class="route-grid" id="route-grid"></div>
-      <figure class="chart-card">
-          <img src="output/perfiles_elevacion.png" alt="Perfiles de elevación de siete rutas de montaña, con distancia, altitud y desnivel acumulado." width="1800" height="1950">
-        <figcaption class="chart-caption">
-          <span>Perfiles de elevación de mis rutas de montaña</span>
-          <span>Cada gráfico tiene su propia escala de altitud.</span>
-        </figcaption>
-      </figure>
-    </section>
-
-    <section class="wrap approach" id="metodo">
-      <div>
-        <p class="eyebrow">Proceso</p>
-        <h2>De GPX a una lectura útil.</h2>
-        <p class="approach-intro">Dos scripts de Python automatizan la lectura, el cálculo de métricas y la creación del gráfico.</p>
-        <div class="tool-tags" aria-label="Tecnologías utilizadas">
-          <span>Python</span><span>pandas</span><span>NumPy</span><span>Matplotlib</span><span>GPX / XML</span>
-        </div>
-      </div>
-      <div class="steps">
-        <article class="step">
-          <span class="step-number">01</span>
-          <div><h3>Leer los datos</h3><p>Se recorren los puntos del GPX para extraer coordenadas, altitud, tiempo y, cuando están disponibles, datos de actividad.</p></div>
-        </article>
-        <article class="step">
-          <span class="step-number">02</span>
-          <div><h3>Calcular las métricas</h3><p>Se estima la distancia con Haversine y el desnivel con un umbral para reducir el ruido del altímetro.</p></div>
-        </article>
-        <article class="step">
-          <span class="step-number">03</span>
-          <div><h3>Comparar visualmente</h3><p>Los perfiles se suavizan con una media móvil y se presentan en una cuadrícula de gráficos independientes.</p></div>
-        </article>
-      </div>
     </section>
   </main>
+
+  <dialog class="route-dialog" id="route-dialog" aria-labelledby="detail-title">
+    <div class="dialog-top">
+      <div>
+          <p class="eyebrow">Ficha de actividad</p>
+          <h2 id="detail-title"></h2>
+          <p class="dialog-date" id="detail-date"></p>
+      </div>
+      <button class="dialog-close" id="detail-close" type="button" aria-label="Cerrar ficha">×</button>
+    </div>
+    <svg class="detail-chart" id="detail-chart" viewBox="0 0 720 300" role="img"></svg>
+    <p class="profile-readout" id="profile-readout" aria-live="polite">Mueve el cursor sobre el perfil para consultar distancia y altitud.</p>
+    <dl class="detail-stats" id="detail-stats"></dl>
+  </dialog>
 
   <footer>
     <div class="wrap footer-inner">
@@ -468,8 +461,152 @@
   <script>
     const routeGrid = document.querySelector("#route-grid");
     const routeStatus = document.querySelector("#route-status");
+    const routeDialog = document.querySelector("#route-dialog");
+    const profileReadout = document.querySelector("#profile-readout");
+    const svgNamespace = "http://www.w3.org/2000/svg";
     const formatNumber = (value, digits = 0) =>
       new Intl.NumberFormat("es-ES", { maximumFractionDigits: digits }).format(value);
+
+    function svgNode(name, attributes = {}) {
+      const element = document.createElementNS(svgNamespace, name);
+      for (const [key, value] of Object.entries(attributes)) element.setAttribute(key, value);
+      return element;
+    }
+
+    function createElevationChart(profile, routeName, compact = false) {
+      const width = compact ? 360 : 720;
+      const height = compact ? 76 : 300;
+      const margin = compact
+        ? { top: 5, right: 3, bottom: 5, left: 3 }
+        : { top: 20, right: 22, bottom: 38, left: 48 };
+      const values = profile.map((point) => point.altitud_m);
+      const minElevation = Math.min(...values);
+      const maxElevation = Math.max(...values);
+      const elevationRange = maxElevation - minElevation || 1;
+      const maxDistance = profile[profile.length - 1].distancia_km || 1;
+      const plotWidth = width - margin.left - margin.right;
+      const plotHeight = height - margin.top - margin.bottom;
+      const coordinates = profile.map((point) => ({
+        ...point,
+        x: margin.left + point.distancia_km / maxDistance * plotWidth,
+        y: margin.top + (maxElevation - point.altitud_m) / elevationRange * plotHeight,
+      }));
+      const svg = svgNode("svg", {
+        viewBox: `0 0 ${width} ${height}`,
+        class: compact ? "route-sparkline" : "detail-chart",
+        role: "img",
+        "aria-label": `Perfil de elevación de ${routeName}, desde 0 hasta ${formatNumber(maxDistance, 1)} kilómetros.`,
+        preserveAspectRatio: "none",
+      });
+
+      if (!compact) {
+        for (let index = 0; index <= 4; index += 1) {
+          const y = margin.top + plotHeight * index / 4;
+          const altitude = maxElevation - elevationRange * index / 4;
+          svg.append(svgNode("line", {
+            x1: margin.left, x2: width - margin.right, y1: y, y2: y,
+            stroke: "#e4e9e3", "stroke-width": 1,
+          }));
+          const label = svgNode("text", {
+            x: margin.left - 9, y: y + 4, "text-anchor": "end",
+            fill: "#626e67", "font-size": 11,
+          });
+          label.textContent = `${formatNumber(altitude)} m`;
+          svg.append(label);
+        }
+
+        const distanceLabel = svgNode("text", {
+          x: width - margin.right, y: height - 8, "text-anchor": "end",
+          fill: "#626e67", "font-size": 11,
+        });
+        distanceLabel.textContent = `Distancia · ${formatNumber(maxDistance, 2)} km`;
+        svg.append(distanceLabel);
+      }
+
+      const profilePoints = coordinates.map((point) => `${point.x},${point.y}`).join(" ");
+      if (!compact) {
+        svg.append(svgNode("polygon", {
+          points: `${margin.left},${height - margin.bottom} ${profilePoints} ${width - margin.right},${height - margin.bottom}`,
+          fill: "#dce8de",
+          opacity: 0.72,
+        }));
+      }
+      svg.append(svgNode("polyline", {
+        points: profilePoints,
+        fill: "none",
+        stroke: "#365c49",
+        "stroke-width": compact ? 2.1 : 3,
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round",
+      }));
+
+      if (!compact) {
+        const marker = svgNode("line", {
+          y1: margin.top, y2: height - margin.bottom,
+          stroke: "#89988b", "stroke-width": 1, "stroke-dasharray": "4 4", visibility: "hidden",
+        });
+        const pointMarker = svgNode("circle", {
+          r: 5, fill: "#ffffff", stroke: "#365c49", "stroke-width": 3, visibility: "hidden",
+        });
+        const pointerTarget = svgNode("rect", {
+          x: margin.left, y: margin.top, width: plotWidth, height: plotHeight,
+          fill: "transparent", "pointer-events": "all",
+        });
+        svg.append(marker, pointMarker, pointerTarget);
+        svg.addEventListener("pointermove", (event) => {
+          const bounds = svg.getBoundingClientRect();
+          const fraction = Math.max(0, Math.min(1,
+            ((event.clientX - bounds.left) / bounds.width * width - margin.left) / plotWidth
+          ));
+          const targetDistance = fraction * maxDistance;
+          const nearest = coordinates.reduce((best, point) =>
+            Math.abs(point.distancia_km - targetDistance) < Math.abs(best.distancia_km - targetDistance)
+              ? point : best
+          );
+          marker.setAttribute("x1", nearest.x);
+          marker.setAttribute("x2", nearest.x);
+          marker.setAttribute("visibility", "visible");
+          pointMarker.setAttribute("cx", nearest.x);
+          pointMarker.setAttribute("cy", nearest.y);
+          pointMarker.setAttribute("visibility", "visible");
+          profileReadout.textContent =
+            `${formatNumber(nearest.distancia_km, 2)} km · ${formatNumber(nearest.altitud_m, 1)} m de altitud`;
+        });
+        svg.addEventListener("pointerleave", () => {
+          marker.setAttribute("visibility", "hidden");
+          pointMarker.setAttribute("visibility", "hidden");
+        });
+      }
+
+      return svg;
+    }
+
+    function showRouteDetails(route) {
+      document.querySelector("#detail-title").textContent = route.ruta;
+      document.querySelector("#detail-date").textContent = new Intl.DateTimeFormat("es-ES", {
+        day: "2-digit", month: "long", year: "numeric", timeZone: "UTC",
+      }).format(new Date(`${route.fecha.slice(0, 10)}T00:00:00Z`));
+      routeDialog.querySelector("#detail-chart").replaceWith(
+        createElevationChart(route.perfil, route.ruta)
+      );
+      const detailStats = document.querySelector("#detail-stats");
+      detailStats.replaceChildren();
+      addStat(detailStats, "Distancia", `${formatNumber(route.distancia_km, 2)} km`);
+      addStat(detailStats, "Desnivel positivo", `+${formatNumber(route.desnivel_pos_m)} m`);
+      addStat(detailStats, "Desnivel negativo", `−${formatNumber(route.desnivel_neg_m)} m`);
+      addStat(detailStats, "Altitud mínima", `${formatNumber(route.alt_min_m)} m`);
+      addStat(detailStats, "Altitud máxima", `${formatNumber(route.alt_max_m)} m`);
+      addStat(detailStats, "Tiempo total", `${formatNumber(route.tiempo_total_h, 2)} h`);
+      addStat(detailStats, "Tiempo en movimiento", `${formatNumber(route.tiempo_mov_h, 2)} h`);
+      const speed = route.tiempo_mov_h
+        ? route.distancia_km / route.tiempo_mov_h
+        : null;
+      addStat(detailStats, "Velocidad en movimiento", speed ? `${formatNumber(speed, 2)} km/h` : "Sin dato");
+      addStat(detailStats, "Consumo energético",
+        Number.isFinite(route.calorias_kcal) ? `${formatNumber(route.calorias_kcal)} kcal` : "No informado en GPX");
+      profileReadout.textContent = "Mueve el cursor sobre el perfil para consultar distancia y altitud.";
+      routeDialog.showModal();
+    }
 
     function addStat(list, label, value) {
       const item = document.createElement("div");
@@ -484,7 +621,7 @@
     function renderRoutes(routes) {
       routeGrid.replaceChildren();
 
-      for (const route of routes) {
+      routes.forEach((route, index) => {
         const card = document.createElement("article");
         const header = document.createElement("header");
         const identity = document.createElement("div");
@@ -492,8 +629,13 @@
         const date = document.createElement("time");
         const icon = document.createElement("span");
         const stats = document.createElement("dl");
+        const openButton = document.createElement("button");
+        const openHint = document.createElement("span");
 
         card.className = "route-card";
+        openButton.className = "route-open";
+        openButton.type = "button";
+        openButton.setAttribute("aria-label", `Ver detalles del recorrido ${route.ruta}`);
         title.textContent = route.ruta;
         date.dateTime = route.fecha;
         date.textContent = new Intl.DateTimeFormat("es-ES", {
@@ -501,22 +643,38 @@
         }).format(new Date(`${route.fecha.slice(0, 10)}T00:00:00Z`));
         icon.className = "route-symbol";
         icon.setAttribute("aria-hidden", "true");
-        icon.textContent = "↗";
+        icon.textContent = String(index + 1).padStart(2, "0");
         stats.className = "route-stats";
 
         identity.append(title, date);
         header.append(identity, icon);
+        openHint.className = "route-open-hint";
+        openHint.textContent = "Ver detalles de la ruta →";
+        openButton.append(header, createElevationChart(route.perfil, route.ruta, true), openHint);
+        openButton.addEventListener("click", () => showRouteDetails(route));
         addStat(stats, "Distancia", `${formatNumber(route.distancia_km, 2)} km`);
         addStat(stats, "Desnivel positivo", `+${formatNumber(route.desnivel_pos_m)} m`);
         addStat(stats, "Desnivel negativo", `−${formatNumber(route.desnivel_neg_m)} m`);
         addStat(stats, "Altitud máxima", `${formatNumber(route.alt_max_m)} m`);
-        card.append(header, stats);
+        const energy = document.createElement("div");
+        const energyLabel = document.createElement("span");
+        const energyValue = document.createElement("span");
+        energy.className = "route-energy";
+        energyLabel.textContent = "Consumo energético";
+        energyValue.textContent = Number.isFinite(route.calorias_kcal)
+          ? `${formatNumber(route.calorias_kcal)} kcal`
+          : "No informado en GPX";
+        energy.append(energyLabel, energyValue);
+        card.append(openButton, stats, energy);
         routeGrid.append(card);
-      }
+      });
 
       routeStatus.textContent = `${routes.length} ${routes.length === 1 ? "ruta" : "rutas"} en el proyecto`;
-      const chart = document.querySelector(".chart-card img");
-      chart.alt = `Perfiles de elevación de ${routes.length} ${routes.length === 1 ? "ruta" : "rutas"} de montaña, con distancia, altitud y desnivel acumulado.`;
+      document.querySelector("#route-count").textContent = formatNumber(routes.length);
+      document.querySelector("#total-distance").textContent =
+        `${formatNumber(routes.reduce((total, route) => total + route.distancia_km, 0), 1)} km`;
+      document.querySelector("#total-ascent").textContent =
+        `${formatNumber(routes.reduce((total, route) => total + route.desnivel_pos_m, 0))} m`;
     }
 
     fetch("output/resumen.json", { cache: "no-cache" })
@@ -526,11 +684,19 @@
       })
       .then((routes) => {
         if (!Array.isArray(routes)) throw new Error("El resumen de rutas tiene un formato inesperado.");
+        if (routes.some((route) => !Array.isArray(route.perfil) || route.perfil.length < 2)) {
+          throw new Error("Faltan perfiles de elevación. Vuelve a ejecutar 01_cargar_gpx.py.");
+        }
         renderRoutes(routes);
       })
       .catch((error) => {
         routeStatus.textContent = `${error.message} Ejecuta 01_cargar_gpx.py y sirve la página desde un servidor web.`;
       });
+
+    document.querySelector("#detail-close").addEventListener("click", () => routeDialog.close());
+    routeDialog.addEventListener("click", (event) => {
+      if (event.target === routeDialog) routeDialog.close();
+    });
   </script>
 </body>
 </html>

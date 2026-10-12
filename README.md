@@ -39,7 +39,7 @@ Los resultados aparecen en la carpeta `output/`.
 
 ## Portfolio web
 
-`index.html` presenta el proyecto, las estadísticas de cada ruta y el gráfico de elevación en una página adaptable a móviles. `01_cargar_gpx.py` genera `output/resumen.json`, el resumen público que utiliza la página. El JSON no contiene coordenadas ni datos de pulsaciones.
+`index.html` presenta una tarjeta con perfil de elevación por ruta. Al abrirla se puede explorar el perfil y consultar las métricas de esa actividad. `01_cargar_gpx.py` genera `output/resumen.json` con una muestra reducida de altitud y distancia para cada ruta; no incluye coordenadas, tiempos por punto ni datos de pulsaciones. El GPX disponible no incluye consumo energético: la página lo indica en lugar de estimar calorías.
 
 ### Añadir una ruta al portfolio
 
@@ -49,7 +49,7 @@ Los resultados aparecen en la carpeta `output/`.
 4. Comprueba `index.html` en un servidor web local: ejecuta `python -m http.server 8000` desde la carpeta del proyecto y abre `http://localhost:8000`. El resumen y el gráfico se actualizan al ejecutar los scripts.
 5. En GitHub Desktop, revisa los archivos, confirma solo los cambios seguros de `output/resumen.json` y `output/perfiles_elevacion.png`, y haz **Push origin**. No subas `data/`, `output/puntos.csv` ni `output/resumen.csv`.
 
-Los archivos GPX de `data/` y los CSV `output/puntos.csv` y `output/resumen.csv` contienen información detallada y permanecen locales, excluidos de Git mediante `.gitignore`. El resumen público incluye los nombres y fechas de las rutas y métricas de distancia y altitud; el gráfico también muestra nombres y fechas.
+Los archivos GPX de `data/` y los CSV `output/puntos.csv` y `output/resumen.csv` contienen información detallada y permanecen locales, excluidos de Git mediante `.gitignore`. El resumen público incluye los nombres y fechas de las rutas, algunas métricas agregadas y hasta 120 muestras de distancia-altitud por ruta, pero no las coordenadas GPS.
 
 ### Publicar con GitHub Pages
 
