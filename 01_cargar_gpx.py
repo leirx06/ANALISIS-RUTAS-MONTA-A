@@ -11,8 +11,10 @@ Salidas:
   - output/puntos.csv   -> una fila por punto GPS (todas las rutas juntas)
   - output/resumen.csv  -> una fila por ruta con sus estadísticas
 """
+import re
 import sys
 import xml.etree.ElementTree as ET
+from math import isfinite
 from pathlib import Path
 
 import numpy as np
@@ -55,6 +57,31 @@ def leer_gpx(ruta: Path) -> pd.DataFrame:
     df["time"] = pd.to_datetime(df["time"], utc=True)
     df.insert(0, "ruta", nombre)
     return df
+
+
+def calorias_gpx(ruta: Path) -> int | None:
+    """Lee las calorías totales solo si el archivo declara explícitamente ese dato."""
+    raiz = ET.parse(ruta).getroot()
+    etiquetas_totales = {
+        "calories",
+        "calorieskcal",
+        "kilocalories",
+        "kcal",
+        "totalcalories",
+        "totalcalorieskcal",
+        "totalkilocalories",
+    }
+    valores = []
+    for elemento in raiz.iter():
+        etiqueta = re.sub(r"[^a-z]", "", elemento.tag.rsplit("}", 1)[-1].lower())
+        if etiqueta in etiquetas_totales and elemento.text:
+            try:
+                valor = float(elemento.text)
+            except ValueError:
+                continue
+            if isfinite(valor) and valor >= 0:
+                valores.append(valor)
+    return round(max(valores)) if valores else None
 
 
 def haversine_m(lat1, lon1, lat2, lon2):
@@ -153,12 +180,16 @@ def main():
         raise SystemExit(f"No se encontraron archivos GPX en {DATA_DIR}")
 
     tablas = []
+    calorias_por_ruta = {}
     for gpx in archivos_gpx:
         df = añadir_columnas(leer_gpx(gpx))
         tablas.append(df)
+        calorias_por_ruta[df["ruta"].iloc[0]] = calorias_gpx(gpx)
 
     puntos = pd.concat(tablas, ignore_index=True)
     res = pd.DataFrame([resumen(t) for t in tablas]).sort_values("fecha")
+    if any(valor is not None for valor in calorias_por_ruta.values()):
+        res["calorias_kcal"] = res["ruta"].map(calorias_por_ruta)
 
     puntos.to_csv(OUT_DIR / "puntos.csv", index=False)
     res.to_csv(OUT_DIR / "resumen.csv", index=False)
@@ -173,6 +204,8 @@ def main():
         "tiempo_total_h",
         "tiempo_mov_h",
     ]
+    if "calorias_kcal" in res.columns:
+        columnas_publicas.append("calorias_kcal")
     resumen_publico = res[columnas_publicas].copy()
     perfiles_por_ruta = {
         df["ruta"].iloc[0]: perfil_publico(df)

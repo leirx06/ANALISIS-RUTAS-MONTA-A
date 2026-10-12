@@ -39,7 +39,7 @@ Los resultados aparecen en la carpeta `output/`.
 
 ## Portfolio web
 
-`index.html` presenta una tarjeta con perfil de elevación por ruta. Al abrirla se puede explorar el perfil y consultar las métricas de esa actividad. `01_cargar_gpx.py` genera `output/resumen.json` con una muestra reducida de altitud y distancia para cada ruta; no incluye coordenadas, tiempos por punto ni datos de pulsaciones. El GPX disponible no incluye consumo energético: la página lo indica en lugar de estimar calorías.
+`index.html` presenta una tarjeta con perfil de elevación por ruta. Al abrirla se puede explorar el perfil y consultar las métricas de esa actividad. `01_cargar_gpx.py` genera `output/resumen.json` con una muestra reducida de altitud y distancia para cada ruta; no incluye coordenadas, tiempos por punto ni datos de pulsaciones. Si el GPX declara calorías, aparecen únicamente dentro de la ficha abierta de esa ruta; si no las incluye, no se muestra ese dato ni se estiman calorías.
 
 ### Añadir una ruta al portfolio
 

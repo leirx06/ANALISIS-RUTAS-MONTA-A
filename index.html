@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f4f3ed">
-  <meta name="description" content="Proyecto de análisis de datos GPS de rutas de montaña con Python, pandas y Matplotlib.">
+  <meta name="description" content="Perfiles de altitud y métricas de rutas de montaña.">
   <title>Análisis de rutas de montaña | Portfolio</title>
   <style>
     :root {
@@ -275,20 +275,6 @@
     .route-stats dt { color: var(--muted); font-size: 0.73rem; }
     .route-stats dd { margin: 1px 0 0; color: var(--forest-dark); font-size: 1rem; font-weight: 750; }
 
-    .route-energy {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 12px;
-      margin-top: 16px;
-      padding-top: 12px;
-      border-top: 1px solid var(--line);
-      font-size: 0.76rem;
-    }
-
-    .route-energy span:first-child { color: var(--muted); }
-    .route-energy span:last-child { color: var(--forest-dark); font-weight: 650; text-align: right; }
-
     .route-dialog {
       width: min(720px, calc(100% - 32px));
       max-width: none;
@@ -400,10 +386,11 @@
   <header class="wrap topbar">
     <a class="brand" href="#inicio" aria-label="Inicio">
       <span class="brand-mark" aria-hidden="true">R</span>
-      <span>ANÁLISIS DE RUTAS · PYTHON</span>
+      <span>ANÁLISIS DE RUTAS</span>
     </a>
     <nav aria-label="Navegación principal">
       <a href="#proyecto">Rutas</a>
+      <a href="https://github.com/leirx06" target="_blank" rel="noopener noreferrer">GitHub · @leirx06</a>
     </nav>
   </header>
 
@@ -421,7 +408,7 @@
         <div class="hero-metric"><strong id="route-count">—</strong><span>rutas analizadas</span></div>
         <div class="hero-metric"><strong id="total-distance">—</strong><span>distancia acumulada</span></div>
         <div class="hero-metric"><strong id="total-ascent">—</strong><span>desnivel positivo acumulado</span></div>
-        <div class="hero-metric"><strong>Sin dato</strong><span>calorías no incluidas en los GPX</span></div>
+        <div class="hero-metric"><strong id="total-descent">—</strong><span>desnivel negativo acumulado</span></div>
       </div>
     </section>
 
@@ -455,7 +442,7 @@
   <footer>
     <div class="wrap footer-inner">
       <span>Proyecto personal · Análisis de rutas de montaña</span>
-      <span>Python · Datos GPS · Visualización</span>
+      <a href="https://github.com/leirx06" target="_blank" rel="noopener noreferrer">GitHub · @leirx06</a>
     </div>
   </footer>
   <script>
@@ -603,8 +590,9 @@
         ? route.distancia_km / route.tiempo_mov_h
         : null;
       addStat(detailStats, "Velocidad en movimiento", speed ? `${formatNumber(speed, 2)} km/h` : "Sin dato");
-      addStat(detailStats, "Consumo energético",
-        Number.isFinite(route.calorias_kcal) ? `${formatNumber(route.calorias_kcal)} kcal` : "No informado en GPX");
+      if (Number.isFinite(route.calorias_kcal)) {
+        addStat(detailStats, "Calorías", `${formatNumber(route.calorias_kcal)} kcal`);
+      }
       profileReadout.textContent = "Mueve el cursor sobre el perfil para consultar distancia y altitud.";
       routeDialog.showModal();
     }
@@ -657,16 +645,7 @@
         addStat(stats, "Desnivel positivo", `+${formatNumber(route.desnivel_pos_m)} m`);
         addStat(stats, "Desnivel negativo", `−${formatNumber(route.desnivel_neg_m)} m`);
         addStat(stats, "Altitud máxima", `${formatNumber(route.alt_max_m)} m`);
-        const energy = document.createElement("div");
-        const energyLabel = document.createElement("span");
-        const energyValue = document.createElement("span");
-        energy.className = "route-energy";
-        energyLabel.textContent = "Consumo energético";
-        energyValue.textContent = Number.isFinite(route.calorias_kcal)
-          ? `${formatNumber(route.calorias_kcal)} kcal`
-          : "No informado en GPX";
-        energy.append(energyLabel, energyValue);
-        card.append(openButton, stats, energy);
+        card.append(openButton, stats);
         routeGrid.append(card);
       });
 
@@ -676,6 +655,8 @@
         `${formatNumber(routes.reduce((total, route) => total + route.distancia_km, 0), 1)} km`;
       document.querySelector("#total-ascent").textContent =
         `${formatNumber(routes.reduce((total, route) => total + route.desnivel_pos_m, 0))} m`;
+      document.querySelector("#total-descent").textContent =
+        `${formatNumber(routes.reduce((total, route) => total + route.desnivel_neg_m, 0))} m`;
     }
 
     fetch("output/resumen.json", { cache: "no-cache" })
@@ -686,12 +667,12 @@
       .then((routes) => {
         if (!Array.isArray(routes)) throw new Error("El resumen de rutas tiene un formato inesperado.");
         if (routes.some((route) => !Array.isArray(route.perfil) || route.perfil.length < 2)) {
-          throw new Error("Faltan perfiles de elevación. Vuelve a ejecutar 01_cargar_gpx.py.");
+          throw new Error("Faltan perfiles de elevación. Vuelve a generar el resumen de rutas.");
         }
         renderRoutes(routes);
       })
       .catch((error) => {
-        routeStatus.textContent = `${error.message} Ejecuta 01_cargar_gpx.py y sirve la página desde un servidor web.`;
+        routeStatus.textContent = `${error.message} Comprueba que el resumen esté disponible y sirve la página desde un servidor web.`;
       });
 
     document.querySelector("#detail-close").addEventListener("click", () => routeDialog.close());
