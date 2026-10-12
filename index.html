@@ -698,6 +698,10 @@
     routeDialog.addEventListener("click", (event) => {
       if (event.target === routeDialog) routeDialog.close();
     });
+    routeDialog.addEventListener("cancel", (event) => {
+      event.preventDefault();
+      routeDialog.close();
+    });
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape" && routeDialog.open) routeDialog.close();
     });
