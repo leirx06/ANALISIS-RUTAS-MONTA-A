@@ -174,7 +174,11 @@ def main():
         "tiempo_mov_h",
     ]
     resumen_publico = res[columnas_publicas].copy()
-    resumen_publico["perfil"] = [perfil_publico(df) for df in tablas]
+    perfiles_por_ruta = {
+        df["ruta"].iloc[0]: perfil_publico(df)
+        for df in tablas
+    }
+    resumen_publico["perfil"] = resumen_publico["ruta"].map(perfiles_por_ruta)
     resumen_publico.to_json(
         OUT_DIR / "resumen.json",
         orient="records",
